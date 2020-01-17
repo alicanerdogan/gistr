@@ -10,14 +10,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Build
+      - name: Build for linux
         run: cargo build --target x86_64-unknown-linux-gnu --all --release && strip target/x86_64-unknown-linux-gnu/release/gistr && mv target/x86_64-unknown-linux-gnu/release/gistr target/x86_64-unknown-linux-gnu/release/gistr_arm64
+
+      - name: Build for mac
+        run: cargo build --target x86_64-apple-darwin --all --release && strip target/x86_64-apple-darwin/release/gistr && mv target/x86_64-apple-darwin/release/gistr target/x86_64-apple-darwin/release/gistr_darwin
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: target/x86_64-unknown-linux-gnu/release/gistr_arm64
+          files: |
+            target/x86_64-unknown-linux-gnu/release/gistr_arm64
+            target/x86_64-apple-darwin/release/gistr_darwin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,23 +41,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: target/release/gistr.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-mac:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Build
-        run: cargo build --all --release && strip target/release/gistr && mv target/release/gistr target/release/gistr_darwin
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: target/release/gistr_darwin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
