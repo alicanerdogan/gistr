@@ -10,16 +10,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Install latest rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          override: true
+
       - name: Build
-        run: cargo build --target x86_64-unknown-linux-gnu --all --release && strip target/x86_64-unknown-linux-gnu/release/gistr && mv target/x86_64-unknown-linux-gnu/release/gistr target/x86_64-unknown-linux-gnu/release/gistr_arm64
+        run: cargo build --all --release && strip target/release/gistr && mv target/release/gistr target/release/gistr_amd64
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/x86_64-unknown-linux-gnu/release/gistr_arm64
-            target/x86_64-apple-darwin/release/gistr_darwin
+            target/release/gistr_amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -29,6 +35,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
+      - name: Install latest rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          override: true
 
       - name: Build
         run: cargo build --all --release
@@ -48,7 +61,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Install latest nightly
+      - name: Install latest rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -57,14 +70,13 @@ jobs:
           override: true
 
       - name: Build for mac
-        run: cargo build --target x86_64-apple-darwin --all --release && strip target/x86_64-apple-darwin/release/gistr && mv target/x86_64-apple-darwin/release/gistr target/x86_64-apple-darwin/release/gistr_darwin
+        run: cargo build --all --release && strip target/release/gistr && mv target/release/gistr target/release/gistr_darwin
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/x86_64-unknown-linux-gnu/release/gistr_arm64
-            target/x86_64-apple-darwin/release/gistr_darwin
+            target/release/gistr_darwin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
