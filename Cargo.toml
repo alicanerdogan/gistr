@@ -1,6 +1,6 @@
 [package]
 name = "gistr"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Alican Erdogan <aerdogan07@gmail.com>"]
 edition = "2018"
 
@@ -17,6 +17,7 @@ serde = "1.0.104"
 serde_derive = "1.0.104"
 console = "0.9.1"
 dirs = "2.0.2"
+uuid = { version = "0.8.1", features = ["serde", "v4"] }
 
 [profile.release]
 lto = true # Link Time Optimization
