@@ -16,8 +16,8 @@ extern crate serde_derive;
 
 mod terminal;
 
-const VERSION: &str = "0.2.0";
-const USER_AGENT: &str = "gistr/0.2.0";
+const VERSION: &str = "0.3.0";
+const USER_AGENT: &str = "gistr/0.3.0";
 
 const GITHUB_API_URL: &str = "https://api.github.com";
 const GITHUB_BASE_PATH: &str = "";
