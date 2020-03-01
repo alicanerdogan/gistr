@@ -299,12 +299,7 @@ impl Error for CreateGistError {
 }
 
 async fn create_gist(options: &CreateGistOptions) -> Result<(), Box<dyn std::error::Error>> {
-    let url = format!(
-        "{}{}/gists?access_token={}",
-        GITHUB_API_URL,
-        GITHUB_BASE_PATH,
-        options.access_token.as_str()
-    );
+    let url = format!("{}{}/gists", GITHUB_API_URL, GITHUB_BASE_PATH);
     let client = reqwest::Client::new();
 
     let mut files: Map<String, CreateGistFilePayload> = Map::new();
@@ -334,6 +329,10 @@ async fn create_gist(options: &CreateGistOptions) -> Result<(), Box<dyn std::err
         .post(url.as_str())
         .json(&payload)
         .header("user-agent", USER_AGENT)
+        .header(
+            "Authorization",
+            format!("token {}", options.access_token.as_str()),
+        )
         .send()
         .await?;
 
@@ -407,16 +406,15 @@ struct GetGistsOptions {
 async fn select_file_from_gists(
     options: &GetGistsOptions,
 ) -> Result<Option<GistFilePayload>, Box<dyn std::error::Error>> {
-    let url = format!(
-        "{}{}/gists?per_page=100&access_token={}",
-        GITHUB_API_URL,
-        GITHUB_BASE_PATH,
-        options.access_token.as_str()
-    );
+    let url = format!("{}{}/gists?per_page=100", GITHUB_API_URL, GITHUB_BASE_PATH);
     let client = reqwest::Client::new();
     let resp = client
         .get(url.as_str())
         .header("user-agent", USER_AGENT)
+        .header(
+            "Authorization",
+            format!("token {}", options.access_token.as_str()),
+        )
         .send()
         .await?;
 
